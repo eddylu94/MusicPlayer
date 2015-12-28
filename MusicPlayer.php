@@ -8,7 +8,9 @@
     
     <body>
 
-        <div id="visualizer"></div>
+        <div id="visualizer">
+            <div id="logo"></div>
+        </div>
 
         <audio id="controls" controls>
             <source src="song1.mp3" type="audio/mpeg">
@@ -18,12 +20,26 @@
         <style>
             #visualizer {
                 background-color: #1A1A1A;
-                height: 337px;
-                width: 600px;
+                height: 450px;
+                width: 800px;
+            }
+            
+            #visualizer #logo {
+                left: 275px;
+                top: 100px;                
+                
+                background-image: url(favicon.png);
+                position: absolute;
+                width: 250px;
+                height: 250px;
+                
+                background-repeat: no-repeat;
+                background-position: 50%;
+                border-radius: 50%;
             }
             
             #controls {
-                width: 600px;
+                width: 800px;
             }            
         </style>
 
