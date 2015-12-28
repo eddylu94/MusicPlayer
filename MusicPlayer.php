@@ -3,7 +3,7 @@
     
     <head>
         <meta charset="utf-8" />
-        <title>Music Visualizer</title>
+        <title>Music Player</title>
     </head>
     
     <body>

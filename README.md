@@ -1,1 +1,1 @@
-# MusicVisualizer
+# MusicPlayer
