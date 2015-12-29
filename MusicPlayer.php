@@ -18,24 +18,31 @@
         </audio>
 
         <style>
+            body {
+                background-color: black;
+            }
+            
             #visualizer {
-                background-color: #1A1A1A;
-                height: 450px;
+                background-image: url(background1.jpg);
+                background-size: 100% auto;
+                height: 500px;
                 width: 800px;
             }
             
             #visualizer #logo {
-                left: 275px;
-                top: 100px;                
+                left: 300px;
+                top: 150px;                
                 
-                background-image: url(favicon.png);
+                background-image: url(logo.png);
                 position: absolute;
-                width: 250px;
-                height: 250px;
+                width: 200px;
+                height: 200px;
                 
                 background-repeat: no-repeat;
                 background-position: 50%;
                 border-radius: 50%;
+                
+                box-shadow: 0 0 35px rgba(0,0,0,1);              
             }
             
             #controls {
