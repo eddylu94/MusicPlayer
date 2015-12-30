@@ -17,6 +17,8 @@
         Your browser does not support the audio element.
         </audio>
 
+        <p id="log">Hello!</p>
+
         <style>
             body {
                 background-color: black;
@@ -47,8 +49,37 @@
             
             #controls {
                 width: 800px;
-            }            
+            }
+            
+            #log {
+                color: #FFFFFF;
+            }
         </style>
+
+        <script>
+            window.onload = function () {
+
+                var audio = document.getElementById('controls');
+
+                var context = new AudioContext();
+                var source = context.createMediaElementSource(audio);
+                var analyser = context.createAnalyser();
+
+                source.connect(analyser);
+                source.connect(context.destination);
+
+                var bufferLength = analyser.frequencyBinCount;
+                var audioData = new Uint8Array(bufferLength);
+
+                function acquireData() {
+                    requestAnimationFrame(acquireData);
+                    analyser.getByteFrequencyData(audioData);
+                    document.getElementById('log').innerHTML = audioData;
+                }
+
+                acquireData();               
+            };
+        </script>
 
     </body>
 
