@@ -19,6 +19,8 @@
 
         <p id="log">Hello!</p>
 
+        <p id="bassDetection"></p>
+
         <style>
             body {
                 background-color: black;
@@ -39,19 +41,20 @@
                 position: absolute;
                 width: 200px;
                 height: 200px;
+                border:8px solid #FFFFFF;
                 
                 background-repeat: no-repeat;
                 background-position: 50%;
                 border-radius: 50%;
-                
-                box-shadow: 0 0 35px rgba(0,0,0,1);              
+
+                box-shadow: 0 0 35px rgba(255,255,255,1);              
             }
             
             #controls {
                 width: 800px;
             }
             
-            #log {
+            #log, #bassDetection {
                 color: #FFFFFF;
             }
         </style>
@@ -71,13 +74,21 @@
                 var bufferLength = analyser.frequencyBinCount;
                 var audioData = new Uint8Array(bufferLength);
 
+                var bassThreshold = 150;
+                var bassDetected = "";
+
                 function acquireData() {
                     requestAnimationFrame(acquireData);
                     analyser.getByteFrequencyData(audioData);
                     document.getElementById('log').innerHTML = audioData;
+
+                    if (audioData[0] > bassThreshold) {
+                        bassDetected += "|";
+                    }
+                    document.getElementById('bassDetection').innerHTML = bassDetected;
                 }
 
-                acquireData();               
+                acquireData();
             };
         </script>
 
