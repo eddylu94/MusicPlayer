@@ -10,7 +10,7 @@
 
         <script>
         function myFunction() {
-            window.open("MusicPlayer.php", "_blank", "toolbar=no, scrollbars=no, resizable=no, width=820, height=550");
+            window.open("MusicPlayer.php", "_blank", "toolbar=no, scrollbars=no, resizable=no, width=850, height=550");
         }
         </script>
         
