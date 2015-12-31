@@ -100,8 +100,8 @@
 
                 var snowflakes = [];
 
-                function createSnowflakes() {
-                    for (var i = 0; i < 1; i++) {
+                function createSnowflakes(numSnowflakes) {
+                    for (var i = 0; i < numSnowflakes; i++) {
                         snowflakes.push(new Image());
                         var length = snowflakes.length;
                         snowflakes[length - 1].src = "white_circle.png";
@@ -114,8 +114,26 @@
                         document.body.appendChild(snowflakes[length - 1]);
                     }
                 }
-                
-                setInterval(createSnowflakes, 300);
+
+                function createSnowflakes_interval() {
+                    var numSnowflakes = 5;
+                    var rand = Math.random();
+                    if (rand <= .7) {
+                        numSnowflakes = 1;
+                    }
+                    else if (rand > .7 && rand <= .95) {
+                        numSnowflakes = 2;
+                    }
+                    else {
+                        numSnowflakes = 3;
+                    }
+                    createSnowflakes(numSnowflakes);
+
+                    var interval = 300 + 500 * Math.random();
+                    setTimeout(createSnowflakes_interval, interval);
+                }
+
+                createSnowflakes_interval();
                 
                 function acquireData() {
                     requestAnimationFrame(acquireData);
