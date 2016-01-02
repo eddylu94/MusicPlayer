@@ -40,6 +40,7 @@
             
             #visualizer {
                 position: relative;
+                z-index: 100;
                 
                 background-image: url(background1.jpg);
                 background-size: 100% auto;
@@ -48,14 +49,14 @@
             }
             
             #visualizer #logo {
-                position: absolute;
+                position: relative;
+                z-index: 200;
                 
                 top: 50%; left: 50%;
                 transform: translate(-50%, -50%);                         
                 
                 background-image: url(logo.png);
                 background-size: 100% auto;
-                position: absolute;
                 width: 200px;
                 height: 200px;
                 border:8px solid #FFFFFF;
@@ -98,25 +99,68 @@
                 var LOGO_DEFAULT_WIDTH = 200;
                 var LOGO_DEFAULT_HEIGHT = 200;
 
-                var snowflakes = [];
+                var snowflakes = [100];
+                var mag_and_dir = [100][2];
+                var currentSnowflake = 0;
+
+                for (var i = 0; i < 100; i++) {
+                    snowflakes[i] = new Image();
+                    snowflakes[i].src = "white_circle.png";
+
+                    snowflakes[i].style.position = "absolute";
+                    snowflakes[i].style.zIndex = "300";
+                    snowflakes[i].style.top = "50%";
+                    snowflakes[i].style.left = "50%";
+                    snowflakes[i].style.transform = "translate(-50%, -50%)"
+                    snowflakes[i].width = 10;
+                    snowflakes[i].height = 10;
+
+                    document.getElementById('visualizer').appendChild(snowflakes[i]);
+                }
 
                 function createSnowflakes(numSnowflakes) {
                     for (var i = 0; i < numSnowflakes; i++) {
-                        snowflakes.push(new Image());
-                        var length = snowflakes.length;
-                        snowflakes[length - 1].src = "white_circle.png";
+
+                        snowflakes[currentSnowflake].style.position = "absolute";
+                        snowflakes[currentSnowflake].style.zIndex = "300";
+                        snowflakes[currentSnowflake].style.top = "50%";
+                        snowflakes[currentSnowflake].style.left = "50%";
+                        snowflakes[currentSnowflake].style.transform = "translate(-50%, -50%)"
+
                         var snowflakeWidth = 5 + 10 * Math.random();
-                        snowflakes[length - 1].width = snowflakeWidth;
-                        snowflakes[length - 1].height = snowflakeWidth;
-                        snowflakes[length - 1].style.opacity = 0.3 + 0.7 * Math.random();
-                        snowflakes[length - 1].style.borderRadius = "50%";
-                        snowflakes[length - 1].style.boxShadow = "0 0 5px rgba(255,255,255,1)";
-                        document.body.appendChild(snowflakes[length - 1]);
+                        snowflakes[currentSnowflake].width = snowflakeWidth;
+                        snowflakes[currentSnowflake].height = snowflakeWidth;
+
+                        snowflakes[currentSnowflake].style.opacity = 0.3 + 0.7 * Math.random();
+                        snowflakes[currentSnowflake].style.borderRadius = "50%";
+                        snowflakes[currentSnowflake].style.boxShadow = "0 0 5px rgba(255,255,255,1)";
+
+                        var direction = 2 * Math.PI * Math.random();
+                        var magnitude = 5 * Math.random();
+
+                        translate = setInterval(function translateSnowflake() {
+                            var velocity_x = Math.cos(direction);
+                            var velocity_y = Math.sin(direction);
+                            
+                            snowflakes[currentSnowflake].style.left = (snowflakes[currentSnowflake].offsetLeft + velocity_x) + "px";
+                            snowflakes[currentSnowflake].style.top = (snowflakes[currentSnowflake].offsetTop + velocity_y) + "px";
+
+                            if (snowflakes[currentSnowflake].offsetTop == 0) {
+                                clearTimeout(translate);
+                            }
+                        }, 100);
+
+                        if (currentSnowflake < 99) {
+                            currentSnowflake++;
+                        }
+                        else {
+                            currentSnowflake = 0;
+                        }
                     }
                 }
 
                 function createSnowflakes_interval() {
-                    var numSnowflakes = 5;
+                    var numSnowflakes;
                     var rand = Math.random();
                     if (rand <= .7) {
                         numSnowflakes = 1;
@@ -134,7 +178,7 @@
                 }
 
                 createSnowflakes_interval();
-                
+
                 function acquireData() {
                     requestAnimationFrame(acquireData);
                     analyser.getByteFrequencyData(audioData);
