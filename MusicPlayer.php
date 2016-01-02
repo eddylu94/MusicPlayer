@@ -100,8 +100,11 @@
                 var LOGO_DEFAULT_HEIGHT = 200;
 
                 var snowflakes = [100];
-                var mag_and_dir = [100][2];
+                var mag_and_dir = new Array();
                 var currentSnowflake = 0;
+
+                var configureCounter = 0;
+                var configureSetting = 10;
 
                 for (var i = 0; i < 100; i++) {
                     snowflakes[i] = new Image();
@@ -115,10 +118,29 @@
                     snowflakes[i].width = 10;
                     snowflakes[i].height = 10;
 
+                    mag_and_dir[i] = new Array();
+                    mag_and_dir[i].push(0);
+                    mag_and_dir[i].push(0);
+
                     document.getElementById('visualizer').appendChild(snowflakes[i]);
                 }
 
-                function createSnowflakes(numSnowflakes) {
+                function determineNumSnowflakes() {
+                    var numSnowflakes;
+                    var rand = Math.random();
+                    if (rand <= .7) {
+                        numSnowflakes = 1;
+                    }
+                    else if (rand > .7 && rand <= .95) {
+                        numSnowflakes = 2;
+                    }
+                    else {
+                        numSnowflakes = 3;
+                    }
+                    return numSnowflakes;
+                }
+
+                function configureSnowflakes(numSnowflakes) {
                     for (var i = 0; i < numSnowflakes; i++) {
 
                         snowflakes[currentSnowflake].style.position = "absolute";
@@ -138,17 +160,8 @@
                         var direction = 2 * Math.PI * Math.random();
                         var magnitude = 5 * Math.random();
 
-                        translate = setInterval(function translateSnowflake() {
-                            var velocity_x = Math.cos(direction);
-                            var velocity_y = Math.sin(direction);
-                            
-                            snowflakes[currentSnowflake].style.left = (snowflakes[currentSnowflake].offsetLeft + velocity_x) + "px";
-                            snowflakes[currentSnowflake].style.top = (snowflakes[currentSnowflake].offsetTop + velocity_y) + "px";
-
-                            if (snowflakes[currentSnowflake].offsetTop == 0) {
-                                clearTimeout(translate);
-                            }
-                        }, 100);
+                        mag_and_dir[currentSnowflake][0] = magnitude;
+                        mag_and_dir[currentSnowflake][1] = direction;
 
                         if (currentSnowflake < 99) {
                             currentSnowflake++;
@@ -159,25 +172,15 @@
                     }
                 }
 
-                function createSnowflakes_interval() {
-                    var numSnowflakes;
-                    var rand = Math.random();
-                    if (rand <= .7) {
-                        numSnowflakes = 1;
-                    }
-                    else if (rand > .7 && rand <= .95) {
-                        numSnowflakes = 2;
-                    }
-                    else {
-                        numSnowflakes = 3;
-                    }
-                    createSnowflakes(numSnowflakes);
+                function translateSnowflakes() {
+                    for (var i = 0; i < 100; i++) {
+                        var velocity_x = mag_and_dir[i][0] * Math.cos(mag_and_dir[i][1]);
+                        var velocity_y = mag_and_dir[i][0] * Math.sin(mag_and_dir[i][1]);
 
-                    var interval = 300 + 500 * Math.random();
-                    setTimeout(createSnowflakes_interval, interval);
+                        snowflakes[i].style.left = (snowflakes[i].offsetLeft + velocity_x) + "px";
+                        snowflakes[i].style.top = (snowflakes[i].offsetTop + velocity_y) + "px";
+                    }
                 }
-
-                createSnowflakes_interval();
 
                 function acquireData() {
                     requestAnimationFrame(acquireData);
@@ -197,7 +200,17 @@
                     //document.getElementById('bassDetection').innerHTML = bassDetected;
                 }
 
+                function update_snowflakes() {
+                    if (configureCounter == configureSetting) {
+                        configureSnowflakes(determineNumSnowflakes());
+                        configureCounter = 0;
+                    }
+                    translateSnowflakes();
+                    configureCounter++;
+                }
+
                 acquireData();
+                setInterval(update_snowflakes, 1);
             };
         </script>
 
