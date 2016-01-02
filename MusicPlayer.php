@@ -12,7 +12,7 @@
             <div id="frame"></div>
             <div id="visualizer">
                 <div id="logo"></div>
-                <audio id="controls" controls>
+                <audio id="controls" controls autoplay>
                     <source src="song1.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
                 </audio>
@@ -49,7 +49,7 @@
                 width: 800px;
                 
                 border-style: solid;
-                border-width: 20px;
+                border-width: 50px;
                 border-color: #000000;
                 
                 z-index: 400;
@@ -129,6 +129,8 @@
                 var configureCounter = 0;
                 var configureSetting = 10;
 
+                var magnitudeMultiplier = 5.0
+
                 for (var i = 0; i < 100; i++) {
                     snowflakes[i] = new Image();
                     snowflakes[i].src = "white_circle.png";
@@ -199,9 +201,9 @@
                             && snowflakes[i].offsetLeft <= 400 + (800 / 2 + 10)
                             && snowflakes[i].offsetTop <= 250 + (500 / 2 + 10)
                             && snowflakes[i].offsetTop >= 250 - (500 / 2 + 10)) {
-                            
-                            var velocity_x = mag_and_dir[i][0] * Math.cos(mag_and_dir[i][1]);
-                            var velocity_y = mag_and_dir[i][0] * Math.sin(mag_and_dir[i][1]);
+
+                            var velocity_x = magnitudeMultiplier * mag_and_dir[i][0] * Math.cos(mag_and_dir[i][1]) * Math.random();
+                            var velocity_y = magnitudeMultiplier * mag_and_dir[i][0] * Math.sin(mag_and_dir[i][1]) * Math.random();
 
                             snowflakes[i].style.left = (snowflakes[i].offsetLeft + velocity_x) + "px";
                             snowflakes[i].style.top = (snowflakes[i].offsetTop + velocity_y) + "px";
@@ -223,10 +225,12 @@
                         bassDetected += "|";
                         logo.style.width = (LOGO_DEFAULT_WIDTH + (audioData[0] - BASS_THRESHOLD)) + "px";
                         logo.style.height = (LOGO_DEFAULT_HEIGHT + (audioData[0] - BASS_THRESHOLD)) + "px";
+                        magnitudeMultiplier = 1 + 30 * (audioData[0] - BASS_THRESHOLD) / BASS_THRESHOLD;
                     }
                     else {
                         logo.style.width = LOGO_DEFAULT_WIDTH + "px";
                         logo.style.height = LOGO_DEFAULT_HEIGHT + "px";
+                        magnitudeMultiplier = 1;
                     }
                     //document.getElementById('bassDetection').innerHTML = bassDetected;
                 }
