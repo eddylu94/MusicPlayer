@@ -9,14 +9,14 @@
     <body>
 
         <div id="player">
+            <div id="frame"></div>
             <div id="visualizer">
                 <div id="logo"></div>
+                <audio id="controls" controls>
+                    <source src="song1.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+                </audio>
             </div>
-
-            <audio id="controls" controls>
-                <source src="song1.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-            </audio>
         </div>
 
         <!--
@@ -31,26 +31,43 @@
                 background-color: black;
             }
             
-            #player {
+            #player {  
+                position: relative;       
                 margin: 0 auto;
                 
-                height: 520px;
-                width: 820px;
+                height: 500px;
+                width: 800px;
+            }
+            
+            #frame {
+                position: absolute;
+                
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);     
+                
+                height: 500px;
+                width: 800px;
+                
+                border-style: solid;
+                border-width: 20px;
+                border-color: #000000;
+                
+                z-index: 400;
             }
             
             #visualizer {
                 position: relative;
-                z-index: 100;
                 
                 background-image: url(background1.jpg);
                 background-size: 100% auto;
                 height: 500px;
                 width: 800px;
+                
+                z-index: 100;
             }
             
             #visualizer #logo {
                 position: relative;
-                z-index: 200;
                 
                 top: 50%; left: 50%;
                 transform: translate(-50%, -50%);                         
@@ -65,11 +82,17 @@
                 background-position: 50%;
                 border-radius: 50%;
 
-                box-shadow: 0 0 35px rgba(255,255,255,1);              
+                box-shadow: 0 0 35px rgba(255,255,255,1);   
+                
+                z-index: 300;           
             }
             
             #controls {
+                position: absolute; 
+                bottom: 0;
                 width: 800px;
+                
+                z-index: 300;
             }
             
             #log, #bassDetection {
@@ -111,7 +134,7 @@
                     snowflakes[i].src = "white_circle.png";
 
                     snowflakes[i].style.position = "absolute";
-                    snowflakes[i].style.zIndex = "300";
+                    snowflakes[i].style.zIndex = "200";
                     snowflakes[i].style.top = "50%";
                     snowflakes[i].style.left = "50%";
                     snowflakes[i].style.transform = "translate(-50%, -50%)"
@@ -143,13 +166,11 @@
                 function configureSnowflakes(numSnowflakes) {
                     for (var i = 0; i < numSnowflakes; i++) {
 
-                        snowflakes[currentSnowflake].style.position = "absolute";
-                        snowflakes[currentSnowflake].style.zIndex = "300";
                         snowflakes[currentSnowflake].style.top = "50%";
                         snowflakes[currentSnowflake].style.left = "50%";
                         snowflakes[currentSnowflake].style.transform = "translate(-50%, -50%)"
 
-                        var snowflakeWidth = 5 + 10 * Math.random();
+                        var snowflakeWidth = 5 + 5 * Math.random();
                         snowflakes[currentSnowflake].width = snowflakeWidth;
                         snowflakes[currentSnowflake].height = snowflakeWidth;
 
@@ -158,7 +179,7 @@
                         snowflakes[currentSnowflake].style.boxShadow = "0 0 5px rgba(255,255,255,1)";
 
                         var direction = 2 * Math.PI * Math.random();
-                        var magnitude = 5 * Math.random();
+                        var magnitude = 2 * Math.random();
 
                         mag_and_dir[currentSnowflake][0] = magnitude;
                         mag_and_dir[currentSnowflake][1] = direction;
@@ -174,11 +195,21 @@
 
                 function translateSnowflakes() {
                     for (var i = 0; i < 100; i++) {
-                        var velocity_x = mag_and_dir[i][0] * Math.cos(mag_and_dir[i][1]);
-                        var velocity_y = mag_and_dir[i][0] * Math.sin(mag_and_dir[i][1]);
+                        if (snowflakes[i].offsetLeft >= 400 - (800 / 2 + 10)
+                            && snowflakes[i].offsetLeft <= 400 + (800 / 2 + 10)
+                            && snowflakes[i].offsetTop <= 250 + (500 / 2 + 10)
+                            && snowflakes[i].offsetTop >= 250 - (500 / 2 + 10)) {
+                            
+                            var velocity_x = mag_and_dir[i][0] * Math.cos(mag_and_dir[i][1]);
+                            var velocity_y = mag_and_dir[i][0] * Math.sin(mag_and_dir[i][1]);
 
-                        snowflakes[i].style.left = (snowflakes[i].offsetLeft + velocity_x) + "px";
-                        snowflakes[i].style.top = (snowflakes[i].offsetTop + velocity_y) + "px";
+                            snowflakes[i].style.left = (snowflakes[i].offsetLeft + velocity_x) + "px";
+                            snowflakes[i].style.top = (snowflakes[i].offsetTop + velocity_y) + "px";
+                        }
+                        else {
+                            mag_and_dir[i][0] = 0;
+                            mag_and_dir[i][1] = 0;
+                        }
                     }
                 }
 
